@@ -1,2 +1,3 @@
 CSRF_ENABLED = True
 SECRET_KEY = 'development'
+MONGOALCHEMY_DATABASE = 'murmur'
