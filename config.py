@@ -1,3 +1,3 @@
 CSRF_ENABLED = True
 SECRET_KEY = 'development'
-MONGOALCHEMY_DATABASE = 'murmur'
+MONGODB_SETTINGS = {'DB': 'murmur'}
