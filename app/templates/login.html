@@ -6,9 +6,9 @@
 <form action="" method="post" name="login">
     {{form.hidden_tag()}}
     <p>
-        Username:<br>
-        {{form.username(size=80)}}<br>
-        {% for error in form.errors.username %}
+        Email:<br>
+        {{form.email(size=80)}}<br>
+        {% for error in form.errors.email %}
         <span style="color: red;">[{{error}}]</span>
         {% endfor %}<br>
     </p>
