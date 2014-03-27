@@ -1,16 +1,17 @@
 from app import db
 from datetime import datetime
+from flask.ext.security import UserMixin, RoleMixin
 
-ROLE_USER = 0
-ROLE_PRO_USER = 1   # Paying for mesaaging
-ROLE_ADMIN = 2
+class Role(db.Document, RoleMixin):
+    name = db.StringField(max_length=80, unique=True)
+    description = db.StringField(max_length=255)
 
-class User(db.Document):
+class User(db.Document, UserMixin):
     # Todo: add messages
-    email = db.EmailField(required=True, unique=True)
-    password = db.StringField(required=True)
+    email = db.EmailField(required=True, unique=True, max_length=255)
+    password = db.StringField(required=True, max_length=255)
     user_id = db.SequenceField(required=True, unique=True, primary_key=True)
-    role = db.IntField(required=True, choices=[ROLE_USER, ROLE_PRO_USER, ROLE_ADMIN], default=ROLE_USER)
+    roles = db.ListField(db.ReferenceField(Role), default=[])
     date_created = db.DateTimeField(required=True, default=datetime.utcnow)
     posts = db.ListField(db.ReferenceField('Post'))
 
