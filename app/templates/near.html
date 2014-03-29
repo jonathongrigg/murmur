@@ -1,0 +1,11 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% for post in posts %}
+<h1>{{post.title}}</h1>
+<h2>By ^{{post.author.id}} at {{post.date_created}}</h2>
+<article>{{post.content}}</article>
+<hr>
+{% endfor %}
+{% endblock %}

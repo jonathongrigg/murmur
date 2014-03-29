@@ -1,0 +1,28 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Add post</h1>
+<form action="" method="post" name="login">
+    {{form.hidden_tag()}}
+    <p>
+        Title:<br>
+        {{form.title(size=80)}}<br>
+        {% for error in form.errors.title %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}<br>
+    </p>
+    <p>
+        Body:<br>
+        {{form.content()}}<br>
+        {% for error in form.errors.content %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}<br>
+    </p>
+    <p>
+        Latitude: {{form.latitude(size=20)}}<br>
+        Longitude: {{form.longitude(size=20)}}
+    </p>
+    <p><input type="submit" value="Add Post"></p>
+</form>
+{% endblock %}

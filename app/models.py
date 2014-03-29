@@ -2,11 +2,11 @@ from app import db
 from datetime import datetime
 from flask.ext.security import UserMixin, RoleMixin
 
-class Role(db.Document, RoleMixin):
+class Role(RoleMixin, db.Document):
     name = db.StringField(max_length=80, unique=True)
     description = db.StringField(max_length=255)
 
-class User(db.Document, UserMixin):
+class User(UserMixin, db.Document):
     # Todo: add messages
     email = db.EmailField(required=True, unique=True, max_length=255)
     password = db.StringField(required=True, max_length=255)
@@ -21,10 +21,12 @@ class User(db.Document, UserMixin):
 class Post(db.Document):
     author = db.ReferenceField(User, reverse_delete_rule=db.CASCADE, required=True)
     date_created = db.DateTimeField(required=True, default=datetime.utcnow)
+    title = db.StringField(required=True)
     content = db.StringField(required=True)
     location = db.PointField(required=True)
     view_count = db.IntField(required=True, default=0)
     support_count = db.IntField(required=True, default=0)
+    spam_count = db.IntField(required=True, default=0)
 
     def __repr__(self):
-        return '<Post by %d>' % (self.author)
+        return '<Post by %d>' % (self.author.id)
