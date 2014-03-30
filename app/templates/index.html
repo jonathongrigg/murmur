@@ -26,11 +26,14 @@
 {% endblock %}
 {% block content %}
 {% if current_user.is_authenticated() %}
-<div class="container w col-lg-8 col-lg-offset-2">
-    <div class="post">
+<div class="container w">
+    <div class="post col-lg-8 col-lg-offset-2">
         <article><h5 class="centered">Loading...</h5></article>
     </div>
-    <button class="btn btn-primary btn-block" id="view_posts">View another story near you</button>
+
+    <div class="col-lg-8 col-lg-offset-2">
+        <button class="btn btn-primary btn-block" id="view_posts">View another story near you</button>
+    </div>
 </div>
 {% else %}
 <div class="container w">
