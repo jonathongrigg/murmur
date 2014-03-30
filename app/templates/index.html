@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div id="ip_location">View posts near your IP</div>
-<div id="geo_location">View posts near your device location</div>
-<br>
+{% if current_user.is_authenticated() %}
 <div>
     <h1>Add a new post</h1>
     <form>
@@ -20,9 +18,14 @@
     </form>
 </div>
 <br>
+<button type="button" id="view_posts">View posts near you</button>
+<br>
 <div id="post">
     <h1></h1>
     <h2></h2>
     <article></article>
 </div>
+{% else %}
+<strong>Please log in to see more</strong>
+{% endif %}
 {% endblock %}

@@ -1,6 +1,5 @@
-var getRandomInt = function(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+var latitude = 0;
+var longitude = 0;
 
 var getPost = function(latitude, longitude) {
     requestData = JSON.stringify({
@@ -16,39 +15,36 @@ var getPost = function(latitude, longitude) {
         type: 'POST',
         success: function(data) {
             console.log(data);
-            number = getRandomInt(0, data.posts.length - 1);
-            console.log(number);
-            $('#post h1').html(data.posts[number]['title']);
-            $('#post h2').html("By ^" + data.posts[number]['author'] + " at " + data.posts[number]['date_created']);
-            $('#post article').html(data.posts[number]['content']);
+            $('#post h1').html(data['title']);
+            $('#post h2').html("By ^" + data['author'] + " at " + data['date_created']);
+            $('#post article').html(data['content']);
         }
     })
 };
 
 $(document).ready(function() {
-    $('#ip_location').click(function() {
+    // Get location data
+    if (Modernizr.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+        });
+    } else {
         $.ajax({
             url: 'http://freegeoip.net/json/',
             dataType: 'json',
             success: function(data) {
-                getPost(data.latitude, data.longitude);
+                latitude = data.latitude;
+                longitude = data.longitude;
             }
         });
-    });
+    }
 
-    $('#geo_location').click(function() {
-        if (Modernizr.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                getPost(position.coords.latitude, position.coords.longitude);
-            });
-        } else {
-            // no native support; maybe try a fallback?
-        }
+    $('#view_posts').click(function() {
+        getPost(latitude, longitude);
     });
 
     $('#add_post').click(function() {
-        var latitude = 0;
-        var longitude = 0;
         var submit = function() {
             requestData = JSON.stringify({
                 "title": $('#title').val(),
@@ -65,25 +61,10 @@ $(document).ready(function() {
                 type: 'POST',
                 success: function(data) {
                     console.log(data);
+                    alert(data.status);
                 }
             })
         }
-        if (Modernizr.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                latitude = position.coords.latitude;
-                longitude = position.coords.longitude;
-                submit();
-            });
-        } else {
-            $.ajax({
-                url: 'http://freegeoip.net/json/',
-                dataType: 'json',
-                success: function(data) {
-                    latitude = data.latitude;
-                    longitude = data.longitude;
-                    submit();
-                }
-            });
-        }
+        submit();
     });
 });

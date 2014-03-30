@@ -14,9 +14,13 @@ class User(UserMixin, db.Document):
     roles = db.ListField(db.ReferenceField(Role), default=[])
     date_created = db.DateTimeField(required=True, default=datetime.utcnow)
     posts = db.ListField(db.ReferenceField('Post'))
+    viewed_posts = db.ListField(db.ReferenceField('Post'))
 
     def __repr__(self):
         return '<User %d>' % (self.user_id)
+
+    def clear_viewed_posts(self):
+        self.update(set__viewed_posts=[])
 
 class Post(db.Document):
     author = db.ReferenceField(User, reverse_delete_rule=db.CASCADE, required=True)
