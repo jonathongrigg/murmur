@@ -3,9 +3,18 @@ from app import app, db, user_datastore
 from .forms import LoginForm, NewPostForm
 from .models import User, Post
 from flask.ext.security.decorators import login_required
+from flask.ext.security.forms import LoginForm, RegisterForm
 from flask.ext.login import current_user
 
 MAX_POSTS_RETURNED = 100
+
+@app.context_processor
+def inject_login():
+    if not current_user.is_authenticated():
+        form = LoginForm()
+        return dict(form=form)
+    return dict()
+
 
 @app.route('/get_post', methods = ['POST'])
 @login_required
@@ -35,15 +44,20 @@ def get_post():
 @login_required
 def add_post():
     data = request.get_json()
-    if data is None:
+    if (data is None) or (not data['title']) or (not data['content']) or (not data['longitude']) or (not data['latitude']):
         abort(404)
     new_post = Post(author=current_user._get_current_object(), title=data['title'], content=data['content'], location=[data['longitude'], data['latitude']]).save()
     current_user.update(push__posts=new_post)
-    return jsonify(status="success")
+    return jsonify(status="Success")
+
+@app.route('/share')
+@login_required
+def share_story():
+    return render_template("share.html")
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("index.html", register=RegisterForm())
 
 @app.route('/clear')
 @login_required

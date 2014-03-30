@@ -15,19 +15,21 @@ var getPost = function(latitude, longitude) {
         type: 'POST',
         success: function(data) {
             console.log(data);
-            $('#post h1').html(data['title']);
-            $('#post h2').html("By ^" + data['author'] + " at " + data['date_created']);
-            $('#post article').html(data['content']);
+            $('.post h1').html(data['title']);
+            $('.post h2').html("By ^" + data['author'] + " on " + data['date_created']);
+            $('.post article').html(data['content']);
         }
     })
 };
 
 $(document).ready(function() {
+    $('#content').wysihtml5();
     // Get location data
     if (Modernizr.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             latitude = position.coords.latitude;
             longitude = position.coords.longitude;
+            getPost(latitude, longitude);
         });
     } else {
         $.ajax({
@@ -36,6 +38,7 @@ $(document).ready(function() {
             success: function(data) {
                 latitude = data.latitude;
                 longitude = data.longitude;
+                getPost(latitude, longitude);
             }
         });
     }
@@ -61,7 +64,11 @@ $(document).ready(function() {
                 type: 'POST',
                 success: function(data) {
                     console.log(data);
-                    alert(data.status);
+                    $('#add_post').html(data.status);
+                    $('#add_post').addClass('btn-info');
+                    setTimeout(function() {
+                        window.location.href='/';
+                    }, 2000); // wait two seconds before reloading
                 }
             })
         }

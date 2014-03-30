@@ -1,31 +1,140 @@
 {% extends "base.html" %}
+{% block header %}
+{% if not current_user.is_authenticated() %}
+<div id="headerwrap">
+    <div class="container">
+        <div class="row centered">
+            <div class="col-lg-8 col-lg-offset-2">
+            <h1>Everyone has a <b>story</b></h1>
+            <h2>Find one near you</h2>
+            </div>
+        </div><!-- row -->
+    </div><!-- container -->
+</div><!-- headerwrap -->
+{% else %}
+<div id="headerwrap">
+    <div class="container">
+        <div class="row centered">
+            <div class="col-lg-8 col-lg-offset-2 post">
+            <h1></h1>
+            <h2></h2>
+            </div>
+        </div><!-- row -->
+    </div><!-- container -->
+</div><!-- headerwrap -->
+{% endif %}
+{% endblock %}
 {% block content %}
 {% if current_user.is_authenticated() %}
-<div>
-    <h1>Add a new post</h1>
-    <form>
-        <div>
-            <label for="title">Title:</label>
-            <input type="text" id="title" />
-        </div>
-        <div>
-            <label for="content">Content:</label>
-            <textarea id="content"></textarea>
-        </div>
-        <div class="button">
-            <button type="button" id="add_post">Add post</button>
-        </div>
-    </form>
-</div>
-<br>
-<button type="button" id="view_posts">View posts near you</button>
-<br>
-<div id="post">
-    <h1></h1>
-    <h2></h2>
-    <article></article>
+<div class="container w col-lg-8 col-lg-offset-2">
+    <div class="post">
+        <article><h5 class="centered">Loading...</h5></article>
+    </div>
+    <button class="btn btn-primary btn-block" id="view_posts">View another story near you</button>
 </div>
 {% else %}
-<strong>Please log in to see more</strong>
+<div class="container w">
+    <div class="row centered">
+        <br><br>
+        <div class="col-lg-4">
+            <i class="fui-user"></i>
+            <h4>ANONYMOUS</h4>
+            <p>There are no usernames, profiles or avatars here on murmur, because sometimes our identity gets in the way of what's important. You are identified only by your unique account number, allowing you to share freely.</p>
+        </div><!-- col-lg-4 -->
+
+        <div class="col-lg-4">
+            <i class="fui-heart"></i>
+            <h4>INTERESTING</h4>
+            <p>Share your thoughts buzzing around in your head, discover a stranger's hidden passion for the ukelele, or relive a precious childhood memory. Step into another pair of shoes and you'll soon realise how interesting life really is.</p>
+        </div><!-- col-lg-4 -->
+
+        <div class="col-lg-4">
+            <i class="fui-location"></i>
+            <h4>LOCATION BASED</h4>
+            <p>Discover interesting stories from people near you right from the start, no following or time consuming friend lists required. See your own town through the eyes of others, and discover the heartbeat you never realised it had.</p>
+        </div><!-- col-lg-4 -->
+    </div><!-- row -->
+    <br>
+    <br>
+</div><!-- container -->
+<div id="blue">
+    <div class="container">
+        <div class="row centered">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h4>SIGN UP</b></h4>
+                <form class="form-inline" action="/register" role="register" method="POST">
+                    {{ register.hidden_tag() }}
+                    <div class="form-group">
+                        {{register.email(size=20, class="flat form-control", placeholder="Email", type="email")}}
+                    </div>
+                    <div class="form-group">
+                        {{register.password(size=20, class="flat form-control", placeholder="Password", type="password")}}
+                    </div>
+                    <div class="form-group">
+                        {{register.password_confirm(size=20, class="flat form-control", placeholder="Confirm password", type="password")}}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div><!-- row -->
+    </div><!-- container -->
+</div><!-- blue wrap -->
+<div id="dg">
+    <div class="container">
+        <div class="row centered">
+            <h4>PRICING PLANS</h4>
+            <br>
+            </div>
+            <div class="col-lg-4 col-lg-offset-2">
+                <!-- START PRICING TABLE -->
+                <div class="pricing-option">
+                    <div class="pricing-top">
+                        <span class="pricing-edition">Standard</span>
+                        <span class="price">
+                            <span class="price-amount">Free</span>
+                        </span>
+                    </div>
+                    <ul>
+                        <li><strong>View stories near you</strong></li>
+                        <li><strong>Share unlimited stories</strong></li>
+                        <li><strong>No ads</strong></li>
+                        <li>No messaging support</li>
+                        <li>No warm fuzzy feeling</li>
+                    </ul>
+                    <a href="register" class="pricing-signup">Register</a>
+                </div><!-- /pricing-option -->
+                <!-- END PRICING TABLE -->
+            </div><!-- /col -->
+
+            <div class="col-lg-4">
+                <!-- START PRICING TABLE -->
+                <div class="pricing-option">
+                    <div class="pricing-top">
+                        <span class="pricing-edition">Premium</span>
+                        <span class="price">
+                            <sup>$</sup>
+                            <span class="price-amount">2</span>
+                            <small>/mo</small>
+                        </span>
+                    </div>
+                    <ul>
+                        <li><strong>View stories near you</strong></li>
+                        <li><strong>Share unlimited stories</strong></li>
+                        <li><strong>No ads</strong></li>
+                        <li><strong>Messaging support</strong></li>
+                        <li><strong>A warm fuzzy feeling inside</strong></li>
+                    </ul>
+                    <a href="#" class="pricing-signup ">Coming soon</a>
+                </div><!-- /pricing-option -->
+                <!-- END PRICING TABLE -->
+            </div><!-- /col -->
+            <div class="col-lg-8 col-lg-offset-2">
+                <h5>WHY?</h5>
+                <p>Running a website isn't free, especially one that deals with large numbers of users. Most social networks cover this cost by trading your personal information with advertisers in the form of targetted advertising, often without your consent. Murmur is different. We do not show ads anywhere on our site as we believe in our users privacy, but this means we need an alternative source of income to keep the site running.</p>
+                <p><em>We realise that not everyone will have the means of purchasing a premium account. However, we believe that the free standard account still retains the essence of what makes murmur special.</em></p>
+            </div>
+        </div><!-- row -->
+    </div><!-- container -->
+</div><!-- DG -->
 {% endif %}
 {% endblock %}
