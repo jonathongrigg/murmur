@@ -6,6 +6,8 @@ from flask.ext.security.decorators import login_required
 from flask.ext.security.forms import LoginForm, RegisterForm
 from flask.ext.login import current_user
 
+import random
+
 MAX_POSTS_RETURNED = 100
 
 @app.context_processor
@@ -57,7 +59,9 @@ def share_story():
 
 @app.route('/')
 def index():
-    return render_template("index.html", register=RegisterForm())
+    images = app.config['IMAGES']
+    image = random.choice(images)
+    return render_template("index.html", register=RegisterForm(), image=image)
 
 @app.route('/clear')
 @login_required

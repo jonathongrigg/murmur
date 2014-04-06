@@ -1,26 +1,30 @@
 {% extends "base.html" %}
 {% block header %}
 {% if not current_user.is_authenticated() %}
-<div id="headerwrap">
-    <div class="container">
-        <div class="row centered">
-            <div class="col-lg-8 col-lg-offset-2">
-            <h1>Everyone has a <b>story</b></h1>
-            <h2>Find one near you</h2>
-            </div>
-        </div><!-- row -->
-    </div><!-- container -->
+<div id="headerwrap" style="background: url({{image}}) no-repeat center top;">
+    <div class="darken">
+        <div class="container">
+            <div class="row centered">
+                <div class="col-lg-8 col-lg-offset-2">
+                <h1>Everyone has a <b>story</b></h1>
+                <h2>Find one near you</h2>
+                </div>
+            </div><!-- row -->
+        </div><!-- container -->
+    </div>
 </div><!-- headerwrap -->
 {% else %}
-<div id="headerwrap">
-    <div class="container">
-        <div class="row centered">
-            <div class="col-lg-8 col-lg-offset-2 post">
-            <h1></h1>
-            <h2></h2>
-            </div>
-        </div><!-- row -->
-    </div><!-- container -->
+<div id="headerwrap" style="background: url({{image}}) no-repeat center top;">
+    <div class="darken">
+        <div class="container">
+            <div class="row centered">
+                <div class="col-lg-8 col-lg-offset-2 post">
+                <h1></h1>
+                <h2></h2>
+                </div>
+            </div><!-- row -->
+        </div><!-- container -->
+    </div>
 </div><!-- headerwrap -->
 {% endif %}
 {% endblock %}
