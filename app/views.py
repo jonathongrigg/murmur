@@ -38,7 +38,7 @@ def get_post():
                 'title': post.title,
                 'content': post.content,
                 'view_count': post.view_count,
-                'support_count': post.view_count
+                'support_count': post.support_count
             })
     return "error"
 
