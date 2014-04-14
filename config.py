@@ -4,11 +4,17 @@ CSRF_ENABLED = True
 SECRET_KEY = 'development'
 MONGO_URL = os.environ.get("MONGOHQ_URL")
 if MONGO_URL:
+    # MONGODB_SETTINGS = {
+    #         'DB': MONGO_URL.split("/")[-1],
+    #         'USERNAME': re.sub(r"(.*?)//(.*?)(@hatch)", r"\2",MONGO_URL).split(':')[0],
+    #         'PASSWORD': re.sub(r"(.*?)//(.*?)(@hatch)", r"\2",MONGO_URL).split(':')[1],
+    #         'HOST': MONGO_URL,
+    #         'PORT': 10048}
     MONGODB_SETTINGS = {
-            'DB': MONGO_URL.split("/")[-1],
-            'USERNAME': re.sub(r"(.*?)//(.*?)(@hatch)", r"\2",MONGO_URL).split(':')[0],
-            'PASSWORD': re.sub(r"(.*?)//(.*?)(@hatch)", r"\2",MONGO_URL).split(':')[1],
-            'HOST': MONGO_URL,
+            'DB': "app24085997",
+            'USERNAME': "murmurmongohq",
+            'PASSWORD': "murmurmongohq*",
+            'HOST': "mongodb://murmurmongohq:murmurmongohq*@oceanic.mongohq.com:10048/app24085997",
             'PORT': 10048}
 else:
     MONGODB_SETTINGS = {'DB': 'murmur'}
