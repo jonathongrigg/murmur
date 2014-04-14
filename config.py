@@ -1,6 +1,17 @@
+import re
+
 CSRF_ENABLED = True
 SECRET_KEY = 'development'
-MONGODB_SETTINGS = {'DB': 'murmur'}
+MONGO_URL = os.environ.get("MONGOHQ_URL")
+if MONGO_URL:
+    MONGODB_SETTINGS = {
+            'DB': MONGO_URL.split("/")[-1],
+            'USERNAME': re.sub(r"(.*?)//(.*?)(@hatch)", r"\2",MONGO_URL).split(':')[0],
+            'PASSWORD': re.sub(r"(.*?)//(.*?)(@hatch)", r"\2",MONGO_URL).split(':')[1],
+            'HOST': MONGO_URL,
+            'PORT': 10048}
+else:
+    MONGODB_SETTINGS = {'DB': 'murmur'}
 DEBUG = True
 SECURITY_PASSWORD_HASH = 'bcrypt'
 SECURITY_PASSWORD_SALT = "U|+-CsEh1#@:*MJ&E)3|*O8u>1onU|$u~ZTgJefXJ~u#0d$Fhs AN@Y%W=+1 nJ~"
