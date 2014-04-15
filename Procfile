@@ -1,1 +1,1 @@
-web: NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin gunicorn heroku:app
+web: NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn heroku:app
