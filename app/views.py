@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, send_from_directory, request, abort, jsonify
 from app import app, db, user_datastore
 from .forms import LoginForm, NewPostForm
-from .models import User, Post
+from .models import User, Post, Role
 from flask.ext.security.decorators import login_required
 from flask.ext.security.forms import LoginForm, RegisterForm
+from flask.ext.security.signals import user_registered
 from flask.ext.login import current_user
 
 import random
@@ -17,6 +18,9 @@ def inject_login():
         return dict(form=form)
     return dict()
 
+@user_registered.connect_via(app)
+def user_registered_sighandler(user, app):
+    user_datastore.add_role_to_user(user, user_datastore.find_role("User"))
 
 @app.route('/get_post', methods = ['POST'])
 @login_required
