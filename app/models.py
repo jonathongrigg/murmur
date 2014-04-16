@@ -37,6 +37,7 @@ class Post(db.Document):
     date_created = db.DateTimeField(required=True, default=datetime.utcnow)
     title = db.StringField(required=True)
     content = db.StringField(required=True)
+    cover = db.URLField(required=True)
     location = db.PointField(required=True)
     view_count = db.IntField(required=True, default=0)
     support_count = db.IntField(required=True, default=0)

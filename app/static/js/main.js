@@ -22,15 +22,19 @@ var getPost = function(latitude, longitude) {
             $('.post h1').html(data['title']);
             $('.post h2').html("By ^" + data['author'] + " on " + data['date_created']);
             $('.post article').html(data['content']);
+            if (data['cover']) {
+                $('#headerwrap').css('background-image', 'url(' + data['cover'] + ')');
+                $('#headerwrap').css('background-position', 'center center');
+            }
         }
     })
 };
 
-var displayUnsplashImages = function(images) {
+var displayUnsplashImages = function(images, ids) {
     $('#cover').empty();
     for (var i = 0; i < images.length; i++) {
-        console.log(images[i]);
-        $('#cover').append('<option data-img-src="' + images[i] + '" value="' + (i+1) + '"></option>');
+        //console.log(images[i]);
+        $('#cover').append('<option data-img-src="' + images[i] + '" value="' + ids[i] + '"></option>');
     }
     $('select').imagepicker();
 }
@@ -41,6 +45,7 @@ var getUnsplashImages = function(numberOfImages) {
         return false;
     }
     var imageArray = [];
+    var idArray = [];
     $.ajax({
         type: 'GET',
         url: 'http://api.tumblr.com/v2/blog/unsplash.tumblr.com/posts/photo/',
@@ -50,7 +55,7 @@ var getUnsplashImages = function(numberOfImages) {
         },
         success: function(data) {
             total_images = data.response.total_posts;
-            console.log(data);
+            //console.log(data);
             //console.log(total_images);
             $.ajax({
                 type: 'GET',
@@ -61,15 +66,17 @@ var getUnsplashImages = function(numberOfImages) {
                     offset: getRandomInt(0, total_images-20)
                 },
                 success: function(data) {
-                    console.log(data);
+                    //console.log(data);
                     while (imageArray.length != numberOfImages) {
-                        image = data.response.posts[getRandomInt(0, 19)].photos[0].alt_sizes[1].url;
+                        var rand = getRandomInt(0, 19);
+                        image = data.response.posts[rand].photos[0].alt_sizes[1].url;
+                        id = data.response.posts[rand].id;
                         if ($.inArray(image, imageArray) === -1) {  // haven't seen this image yet
+                            idArray[imageArray.length] = id;
                             imageArray[imageArray.length] = image;
                         }
                     }
-                    console.log(imageArray);
-                    displayUnsplashImages(imageArray);
+                    displayUnsplashImages(imageArray, idArray);
                 }
             })
         }
@@ -115,6 +122,7 @@ $(document).ready(function() {
             requestData = JSON.stringify({
                 "title": $('#title').val(),
                 "content": $('#content').val(),
+                "cover_id": $('select').val(),
                 "latitude": latitude,
                 "longitude": longitude
             });

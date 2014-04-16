@@ -17,3 +17,4 @@ newrelic==2.18.1.15
 passlib==1.6.2
 py-bcrypt==0.4
 pymongo==2.6.3
+requests==2.2.1

@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, send_from_directory, request
 from app import app, db, user_datastore
 from .forms import LoginForm, NewPostForm
 from .models import User, Post, Role
+from .utils import get_url_from_id
 from flask.ext.security.decorators import login_required
 from flask.ext.security.forms import LoginForm, RegisterForm
 from flask.ext.security.signals import user_registered
@@ -41,6 +42,7 @@ def get_post():
                 'date_created': post.date_created,
                 'title': post.title,
                 'content': post.content,
+                'cover': post.cover,
                 'view_count': post.view_count,
                 'support_count': post.support_count
             })
@@ -50,9 +52,9 @@ def get_post():
 @login_required
 def add_post():
     data = request.get_json()
-    if (data is None) or (not data['title']) or (not data['content']) or (not data['longitude']) or (not data['latitude']):
+    if (data is None) or (not data['title']) or (not data['content']) or (not data['longitude']) or (not data['latitude']) or (not data['cover_id']):
         abort(404)
-    new_post = Post(author=current_user._get_current_object(), title=data['title'], content=data['content'], location=[data['longitude'], data['latitude']]).save()
+    new_post = Post(author=current_user._get_current_object(), title=data['title'], content=data['content'], cover=get_url_from_id(data['cover_id']), location=[data['longitude'], data['latitude']]).save()
     current_user.update(push__posts=new_post)
     return jsonify(status="Success")
 
