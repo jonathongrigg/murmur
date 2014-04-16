@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="form-signin-heading text-center">Sign in to murmur</h1>
+    <div class="card card-signin">
+        <form class="form-signin" role="form" action="{{ url_for_security('login') }}" method="POST" name="login_user_form">
+            {{ login_user_form.hidden_tag() }}
+            {{ login_user_form.next }}
+            {{ login_user_form.email(class="form-control", placeholder="Email", type="email", required=true, autofocus=true)}}
+            {% if login_user_form.email.errors %}
+            {% for error in login_user_form.email.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+            {% endif %}
+
+            {{ login_user_form.password(class="form-control", placeholder="Password", type="password", required=true)}}
+            {% if login_user_form.password.errors %}
+            {% for error in login_user_form.password.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+            {% endif %}
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+            <div>
+                <a class="pull-right" href="{{ url_for_security('forgot_password') }}">Forgot password</a>
+                <label class="checkbox">
+                    {{ login_user_form.remember }}Stay signed in
+                </label>
+            </div>
+        </form>
+    </div>
+
+    <p class="text-center">
+        <a href="/register">Create an account</a><br>
+        <a href="/confirm">Resend confirmation instructions</a>
+    </p>
+</div>
+{% endblock %}

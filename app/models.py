@@ -20,6 +20,7 @@ class User(UserMixin, db.Document):
     spammed_posts = db.ListField(db.ReferenceField('Post'))
     # The following are all handled by flask-security, which will
     # set initial values when accounts are registered
+    confirmed_at = db.DateTimeField()
     last_login_at = db.DateTimeField()
     current_login_at = db.DateTimeField()
     last_login_ip = db.StringField()

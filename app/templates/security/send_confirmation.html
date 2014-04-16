@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="form-signin-heading text-center">Resend confirmation instructions</h1>
+    <div class="card card-signin">
+        <form class="form-signin" role="form" action="{{ url_for_security('send_confirmation') }}" method="POST" name="send_confirmation_form">
+            {{ send_confirmation_form.hidden_tag() }}
+            {{ send_confirmation_form.email(class="form-control", placeholder="Email", type="email", required=true, autofocus=true)}}
+            {% if send_confirmation_form.email.errors %}
+            {% for error in send_confirmation_form.email.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+            {% endif %}
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Resend</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

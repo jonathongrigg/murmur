@@ -58,6 +58,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/register">Register</a></li>
                 </ul>
+                {% if request.path!="/login" %}
                 <span class="navbar-right">
                     <form class="navbar-form form-inline" action="/login" role="login" method="POST">
                         {{ form.hidden_tag() }}
@@ -71,19 +72,18 @@
                     </form>
                 </span>
                 {% endif %}
+                {% endif %}
             </div><!-- /.navbar-collapse -->
         </nav><!-- /navbar -->
 
         {% block header %}{% endblock %}
 
         <div class="messages">
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-            <ul>
-            {% for message in messages %}
-                <li>{{ message }} </li>
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
             {% endfor %}
-            </ul>
             {% endif %}
             {% endwith %}
         </div>
