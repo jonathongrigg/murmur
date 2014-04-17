@@ -84,7 +84,6 @@ p {
 #headerwrap {
     margin-top: -10px;
     text-align:center;
-    background-attachment: relative;
     background-position: center center;
     min-height: 450px;
     width: 100%;
@@ -148,7 +147,7 @@ footer p {
     font-weight: 700;
 }
 
-.w i {
+.w span {
     color: #ff7878;
     font-size: 30px;
 }
@@ -325,6 +324,36 @@ ul.thumbnails li[class*="span"]:first-child {
 .card-signin {
   width: 354px;
   padding: 40px;
+}
+
+/* Story list */
+
+.w h1 {
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+
+.list-group-item {
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background: #F9F9F9 !important;
+}
+
+.list-group-item h4 {
+    font-weight: 300;
+    color: #f85c37;
+}
+
+.list-group-item p {
+    font-weight: 300;
+    color: #333;
+}
+
+.list-group-item span {
+    font-size: 20px;
+    padding: 10px;
 }
 
 /* ==========================================================================

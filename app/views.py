@@ -63,6 +63,11 @@ def add_post():
 def share_story():
     return render_template("share.html")
 
+@app.route('/stories')
+@login_required
+def user_stories():
+    return render_template("stories.html")
+
 @app.route('/')
 def index():
     images = app.config['IMAGES']

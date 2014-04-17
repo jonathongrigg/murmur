@@ -42,6 +42,7 @@
                 <ul class="nav navbar-nav">
                     <li{% if request.path=="/" %} class="active"{% endif %}><a href="/">Read a story</a></li>
                     <li{% if request.path=="/share" %} class="active"{% endif %}><a href="/share">Share a story</a></li>
+                    <li{% if request.path=="/stories" %} class="active"{% endif %}><a href="/stories">My stories</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">

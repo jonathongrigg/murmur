@@ -1,8 +1,14 @@
 var latitude = 0;
 var longitude = 0;
 
-function getRandomInt (min, max) {
+function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function deletePost(postId, postTitle) {
+    if (confirm("Are you sure you want to delete " + postTitle + "?")) {
+        // TODO: delete by pinging the server
+    }
 }
 
 var getPost = function(latitude, longitude) {
