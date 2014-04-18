@@ -13,7 +13,7 @@
             </div>
             <div class="col-xs-2 col-sm-1">
                 <a href="/edit/{{ story.id }}"><span class="glyphicon glyphicon-pencil" title="Edit"></span></a>
-                <a href="" onclick="deletePost('{{ story.id }}', '{{ story.title }}')"><span class="glyphicon glyphicon-trash" title="Delete"></span></a>
+                <a href="" onclick='deletePost("{{ story.id }}", "{{ story.title }}")'><span class="glyphicon glyphicon-trash" title="Delete"></span></a>
             </div>
         </div>
 {% endfor %}

@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, send_from_directory, request, abort, jsonify
+from flask import render_template, flash, redirect, send_from_directory, request, abort, jsonify, url_for
 from app import app, db, user_datastore
 from .forms import LoginForm, NewPostForm
 from .models import User, Post, Role
@@ -43,8 +43,8 @@ def get_post():
                 'title': post.title,
                 'content': post.content,
                 'cover': post.cover,
-                'view_count': post.view_count,
-                'support_count': post.support_count
+                'support_count': post.support_count,
+                'supported': (post in current_user.supported_posts)
             })
     return "error"
 
@@ -56,7 +56,43 @@ def add_post():
         abort(404)
     new_post = Post(author=current_user._get_current_object(), title=data['title'], content=data['content'], cover=get_url_from_id(data['cover_id']), location=[data['longitude'], data['latitude']]).save()
     current_user.update(push__posts=new_post)
-    return jsonify(status="Success")
+    return jsonify(status="Success", url=url_for('story', id=new_post.id))
+
+@app.route('/update_post', methods = ['POST'])
+@login_required
+def update_post():
+    data = request.get_json()
+    if (data is None) or (not data['type']) or (not data['id']):
+        abort(404)
+    if data['type'] == 'support':
+        post = Post.objects.get_or_404(id=data['id'])
+        if post in current_user.supported_posts:
+            return jsonify(status="Error")
+        post.support_count += 1
+        post.save()
+        current_user.supported_posts.append(post)
+        current_user.save()
+        return jsonify(status="Success")
+    if data['type'] == 'spam':
+        post = Post.objects.get_or_404(id=data['id'])
+        if post in current_user.spammed_posts:
+            return jsonify(status="Error")
+        post.spam_count += 1
+        post.save()
+        current_user.spammed_posts.append(post)
+        current_user.save()
+        return jsonify(status="Success")
+    if data['type'] == 'delete':
+        post = Post.objects.get_or_404(id=data['id'])
+        if post not in current_user.posts:
+            return jsonify(status="Error")
+        current_user.posts.remove(post)
+        current_user.save()
+        post.delete()
+        flash("Story successfully deleted", "success")
+        return jsonify(status="Success")
+    return jsonify(status="Error")
+
 
 @app.route('/share')
 @login_required
@@ -67,6 +103,22 @@ def share_story():
 @login_required
 def user_stories():
     return render_template("stories.html")
+
+@app.route('/story/<id>')
+@login_required
+def story(id):
+    post = Post.objects.get_or_404(id=id)
+    if post not in current_user.posts:
+        abort(404)
+    return render_template("story.html", post=post)
+
+@app.route('/edit/<id>')
+@login_required
+def edit(id):
+    post = Post.objects.get_or_404(id=id)
+    if post not in current_user.posts:
+        abort(404)
+    return render_template("edit.html", post=post)
 
 @app.route('/')
 def index():

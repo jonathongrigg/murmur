@@ -1,5 +1,6 @@
 var latitude = 0;
 var longitude = 0;
+var currentPost;
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -7,7 +8,20 @@ function getRandomInt(min, max) {
 
 function deletePost(postId, postTitle) {
     if (confirm("Are you sure you want to delete " + postTitle + "?")) {
-        // TODO: delete by pinging the server
+        requestData = JSON.stringify({
+            "type": "delete",
+            "id": postId,
+        });
+        $.ajax({
+            url: '/update_post',
+            dataType: 'json',
+            contentType: 'application/json; charset=UTF-8',
+            data: requestData,
+            type: 'POST',
+            success: function(data) {
+                location.reload();
+            }
+        })
     }
 }
 
@@ -25,8 +39,18 @@ var getPost = function(latitude, longitude) {
         type: 'POST',
         success: function(data) {
             console.log(data);
+            currentPost = data;
             $('.post h1').html(data['title']);
-            $('.post h2').html("By ^" + data['author'] + " on " + data['date_created']);
+            $('.post h3').html(moment(data['date_created']).fromNow() + " by ^" + data['author']);
+            $('.post .btn-group').show();
+            $('.post .support').html(data['support_count']);
+            if (currentPost['supported']) {
+                $('.post #support .glyphicon').removeClass('glyphicon-heart-empty')
+                $('.post #support .glyphicon').addClass('glyphicon-heart')
+            } else {
+                $('.post #support .glyphicon').removeClass('glyphicon-heart')
+                $('.post #support .glyphicon').addClass('glyphicon-heart-empty')
+            }
             $('.post article').html(data['content']);
             if (data['cover']) {
                 $('#headerwrap').css('background-image', 'url(' + data['cover'] + ')');
@@ -119,6 +143,12 @@ $(document).ready(function() {
         getUnsplashImages(5);
     }
 
+    if (window.location.pathname.indexOf("/story") !== -1) {
+        date = $('.post h3 span').html();
+        $('.post h3 span').html(moment(date).fromNow());
+        $('#headerwrap').css('background-position', 'center center');
+    }
+
     $('#view_posts').click(function() {
         getPost(latitude, longitude);
     });
@@ -143,13 +173,56 @@ $(document).ready(function() {
                     console.log(data);
                     $('#add_post').html(data.status);
                     $('#add_post').addClass('btn-info');
-                    setTimeout(function() {
-                        window.location.href='/';
-                    }, 2000); // wait two seconds before reloading
+                    window.location.href=data.url;
                 }
             })
         }
         submit();
+    });
+
+    $('#support').click(function() {
+        requestData = JSON.stringify({
+            "type": "support",
+            "id": currentPost['id'],
+        });
+        if (currentPost['supported']) {
+            currentPost['support_count']--;
+            $('.post #support .glyphicon').removeClass('glyphicon-heart')
+            $('.post #support .glyphicon').addClass('glyphicon-heart-empty')
+        } else {
+            currentPost['support_count']++;
+            $('.post #support .glyphicon').removeClass('glyphicon-heart-empty')
+            $('.post #support .glyphicon').addClass('glyphicon-heart')
+        }
+        $('.post .support').html(currentPost['support_count']);
+        currentPost['supported'] = !currentPost['supported'];
+        $.ajax({
+            url: '/update_post',
+            dataType: 'json',
+            contentType: 'application/json; charset=UTF-8',
+            data: requestData,
+            type: 'POST',
+            success: function(data) {}
+        })
+    });
+
+    $('#spam').click(function() {
+        requestData = JSON.stringify({
+            "type": "spam",
+            "id": currentPost['id'],
+        });
+        $.ajax({
+            url: '/update_post',
+            dataType: 'json',
+            contentType: 'application/json; charset=UTF-8',
+            data: requestData,
+            type: 'POST',
+            success: function(data) {
+                if (data['status'] === 'Success') {
+                    window.location.href='/';
+                }
+            }
+        })
     });
 
     $('#view_more_cover').click(function() {
